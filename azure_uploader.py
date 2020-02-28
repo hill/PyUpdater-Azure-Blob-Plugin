@@ -7,7 +7,7 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 class AzureBlobStorageUploader(BaseUploader):
 
-    name = "Azure Blob Storage"
+    name = "azure-blob"
     author = "Tom Hill"
 
     def init_config(self, config):
@@ -37,22 +37,33 @@ class AzureBlobStorageUploader(BaseUploader):
         self.blob_service_client = BlobServiceClient.from_connection_string(
             self.connection_string
         )
+        self.container_client = self.blob_service_client.get_container_client(
+            self.blob_container_name
+        )
 
     def upload_file(self, filename):
         """Uploads a file to Azure Blob storage"""
 
+        filename_only = os.path.basename(filename)
+
+        # if file already exists
+        for b in self.container_client.list_blobs(name_starts_with=filename_only):
+            self.container_client.delete_blob(filename_only, delete_snapshots="include")
+            break  # there will be only one
+
+        # create the blob
         blob = self.blob_service_client.get_blob_client(
-            container=self.blob_container_name, blob=filename
+            container=self.blob_container_name, blob=filename_only
         )
 
         try:
             with open(filename, "rb") as data:
                 blob.upload_blob(data)
 
-            print("Uploaded", filename)
+            print("Uploaded", filename_only)
             return True
         except Exception as err:
-            print("Failed to upload", filename)
+            print("Failed to upload", filename_only)
             print(err)
 
             self._connect()
