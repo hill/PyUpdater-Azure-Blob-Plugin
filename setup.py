@@ -1,10 +1,31 @@
 from setuptools import setup
 
+with open("README.md", "r") as f:
+    readme = f.read()
+
 setup(
     name="PyUpdater-Azure-Blob-Plugin",
+    version="0.0.1",
     description="Azure Blob Storage plugin for PyUpdater",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     author="Tom Hill",
     author_email="tom@hill.xyz",
+    url="https://github.com/hill/PyUpdater-Azure-Blob-Plugin",
+    platforms=["Any"],
+    install_requires=["azure-storage-blob"],
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Developers",
+        "Environment :: Console",
+    ],
     provides=["pyupdater.plugins",],
-    entry_points={"pyupdater.plugins": ["my_uploader = my_uploader:MyUploader",]},
+    entry_points={
+        "pyupdater.plugins.upload": [
+            "azure_blob_storage = azure_uploader:AzureBlobStorageUploader",
+        ]
+    },
 )
