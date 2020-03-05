@@ -10,6 +10,6 @@
 
 `pip install pyupdater-azure-blob-plugin`
 
-Run `pyupdater settings --plugin azure-blobs` to set up. Get the configuration string from your access keys in Azure and the name of the container you wish to upload your update files to.
+Run `pyupdater settings --plugin azure-blob` to set up. Get the configuration string from your access keys in Azure and the name of the container you wish to upload your update files to.
 
 (Feel free to contribute)
